@@ -73,7 +73,7 @@ export const config = {
               '--no-sandbox',
               '--disable-infobars',
               '--disable-gpu',
-              '--window-size=1920,1080'
+              '--window-size=1920,1080'           
             ]
           }
         }
@@ -117,7 +117,7 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: 'http://localhost:3000',
+  baseUrl: 'https://prtr-prototype-31a8df7b9625.herokuapp.com',
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 10000,
