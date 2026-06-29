@@ -8,19 +8,20 @@ class DownloadDataPage extends BasePage {
     }
     // ===== Page Anchor =====
     get heading() {
+        //return $('h1=Download all data for a year');
         return $('h1=Download all data for a year');
     }
 
     // ===== All Download Buttons =====
     get downloadButtons() {
-        return $$('a[role="button"]');
+        return $$('a[data-testid="aq-button-secondary"]');
     }
 
     /**
      * ✅ Dynamic locator by year
      */
     downloadButtonByYear(year) {
-        return $(`//a[@role='button']//span[contains(text(),'Download ${year} data')]/ancestor::a`);
+        return $(`//a[@data-testid="aq-button-secondary"][.//span[contains(normalize-space(),"Download ${year} data")]]`);
     }
 
     // ===== Actions =====
@@ -34,7 +35,13 @@ class DownloadDataPage extends BasePage {
      */
     async clickDownloadByYear(year) {
         const button = this.downloadButtonByYear(year);
-        await this.click(button);
+
+    await button.waitForDisplayed({ timeout: 10000 });
+    await button.scrollIntoView();
+    await button.waitForClickable({ timeout: 10000 });
+
+    await button.click();
+
     }
 
     /**
@@ -49,11 +56,12 @@ class DownloadDataPage extends BasePage {
      */
     async getAllAvailableYears() {
         const elements = await this.downloadButtons;
-        const years = [];
 
+        const years = [];
+       
         for (const el of elements) {
             const text = await el.getText();
-
+            console.log('Element text:', text);
             const match = text.match(/\d{4}/);
             if (match) {
                 years.push(match[0]);

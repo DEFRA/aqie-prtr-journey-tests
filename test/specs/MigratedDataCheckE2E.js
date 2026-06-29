@@ -1,5 +1,5 @@
 
-/*import PRTRlandingPage from '../page-objects/PRTRlandingPage.js';
+import PRTRlandingPage from '../page-objects/PRTRlandingPage.js';
 import locationSearchPage from '../page-objects/LocationSearchPage.js';
 import locationResultsPage from '../page-objects/LocationResultsPage.js';
 import facilitiesResultsPage from '../page-objects/FacilitiesResultsPage.js';
@@ -60,7 +60,8 @@ describe('E2E - PRTR User Journey', () => {
 
     });
 
-});*/
+    
+});
 
 
 

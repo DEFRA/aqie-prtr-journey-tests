@@ -84,7 +84,7 @@ export const config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: 'https://prtr-prototype-31a8df7b9625.herokuapp.com',
+    baseUrl: 'https://aqie-prtr-frontend.test.cdp-int.defra.cloud/uk-pollutant-release-and-transfer-register/en',
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 10000,

@@ -4,12 +4,12 @@ class PrtrLandingPage extends BasePage {
 
     // ===== Navigation =====
     async open() {
-        await super.open('/');
+        await super.open('');
     }
 
     // ===== Page Anchor =====
     get heading() {
-        return $('h1=UK Pollutant Release and Transfer Register (PRTR)');
+        return $('h1=Search industrial pollutant emissions');
     }
 
     // ===== Header =====
@@ -27,7 +27,8 @@ class PrtrLandingPage extends BasePage {
     }
 
     get downloadDataLink() {
-        return $('a[href="download"]');
+        return $('a[href="/download-all-data-for-a-year/en"]');
+    
     }
 
     // ===== Footer =====
