@@ -1,4 +1,3 @@
-
 /*import PRTRlandingPage from '../page-objects/PRTRlandingPage.js';
 import locationSearchPage from '../page-objects/LocationSearchPage.js';
 import locationResultsPage from '../page-objects/LocationResultsPage.js';
@@ -61,8 +60,6 @@ describe('E2E - PRTR User Journey', () => {
     });
 
 });*/
-
-
 
 /*it('should validate non hazardous waste transfer details', async () => {
 
@@ -180,8 +177,6 @@ it('should verify download options for all years', async () => {
 
 });*/
 
-
-
 /*describe('E2E - Invalid Search', () => {
 
     it('should show error for invalid location', async () => {
@@ -210,4 +205,3 @@ it('should verify download options for all years', async () => {
     });
 
 });*/
-

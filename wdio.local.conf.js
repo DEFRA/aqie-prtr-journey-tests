@@ -1,11 +1,10 @@
-import allure from 'allure-commandline';
-import path from 'path';
-
+import allure from 'allure-commandline'
+import path from 'path'
 
 const debug = process.env.DEBUG
 const oneMinute = 60 * 1000
 const oneHour = 60 * 60 * 1000
-const downloadDir = path.resolve('./downloads');
+const downloadDir = path.resolve('./downloads')
 
 const execArgv = ['--loader', 'esm-module-alias/loader']
 
@@ -58,7 +57,7 @@ export const config = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  //maxInstances: 1,
+  // maxInstances: 1,
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -68,54 +67,55 @@ export const config = {
   capabilities: debug
     ? [
         {
-            browserName: 'chrome',
-            'goog:chromeOptions': {
-                args: [
-                    '--no-sandbox',
-                    '--disable-infobars',
-                    '--disable-gpu',
-                    '--window-size=1920,1080',
-                    '--disable-popup-blocking',
-                    '--disable-notifications',
-                    '--disable-features=InsecureDownloadWarnings'
-                ],
-                prefs: {
-                    'download.default_directory': downloadDir,
-                    //'download.default_directory': `${process.cwd()}\\downloads`,
-                    'download.prompt_for_download': false,
-                    'download.directory_upgrade': true,
-                    'profile.default_content_setting_values.automatic_downloads': 1,
-                    'safebrowsing.enabled': true,
-                    'safebrowsing.disable_download_protection': true
-                }
+          browserName: 'chrome',
+          'goog:chromeOptions': {
+            args: [
+              '--no-sandbox',
+              '--disable-infobars',
+              '--disable-gpu',
+              '--window-size=1920,1080',
+              '--disable-popup-blocking',
+              '--disable-notifications',
+              '--disable-features=InsecureDownloadWarnings',
+
+            ],
+            prefs: {
+              'download.default_directory': downloadDir,
+              // 'download.default_directory': `${process.cwd()}\\downloads`,
+              'download.prompt_for_download': false,
+              'download.directory_upgrade': true,
+              'profile.default_content_setting_values.automatic_downloads': 1,
+              'safebrowsing.enabled': true,
+              'safebrowsing.disable_download_protection': true
             }
+          }
         }
-    ]
+      ]
     : [
         {
-            maxInstances: 1,
-            browserName: 'chrome',
-            'goog:chromeOptions': {
-                args: [
-                    '--no-sandbox',
-                    '--disable-infobars',
-                    '--disable-gpu',
-                    '--window-size=1920,1080',
-                    '--disable-popup-blocking',
-                    '--disable-notifications',
-                    '--disable-features=InsecureDownloadWarnings'
-                ],
-                prefs: {
-                    'download.default_directory': `${process.cwd()}\\downloads`,
-                    'download.prompt_for_download': false,
-                    'download.directory_upgrade': true,
-                    'profile.default_content_setting_values.automatic_downloads': 1,
-                    'safebrowsing.enabled': true,
-                    'safebrowsing.disable_download_protection': true
-                }
+          maxInstances: 1,
+          browserName: 'chrome',
+          'goog:chromeOptions': {
+            args: [
+              '--no-sandbox',
+              '--disable-infobars',
+              '--disable-gpu',
+              '--window-size=1920,1080',
+              '--disable-popup-blocking',
+              '--disable-notifications',
+              '--disable-features=InsecureDownloadWarnings'
+            ],
+            prefs: {
+              'download.default_directory': `${process.cwd()}\\downloads`,
+              'download.prompt_for_download': false,
+              'download.directory_upgrade': true,
+              'profile.default_content_setting_values.automatic_downloads': 1,
+              'safebrowsing.enabled': true,
+              'safebrowsing.disable_download_protection': true
             }
+          }
         }
-    ],
+      ],
 
   execArgv,
 
@@ -155,7 +155,8 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: 'https://aqie-prtr-frontend.test.cdp-int.defra.cloud/uk-pollutant-release-and-transfer-register/en',
+  baseUrl:
+    'https://aqie-prtr-frontend.test.cdp-int.defra.cloud/uk-pollutant-release-and-transfer-register/en',
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 10000,

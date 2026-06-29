@@ -6,7 +6,6 @@
   "year": 2024,
 
   "sections": {
-
     "air": [
       {
         "pollutant": "Lead and compounds (as Pb)",
@@ -14,13 +13,13 @@
         "threshold": "200kg",
 
         "details": {
-          "pollutant":"Lead and compounds (as Pb)",
-          "total":"612kg",
+          "pollutant": "Lead and compounds (as Pb)",
+          "total": "612kg",
           "threshold": "200kg",
           "accidentallyReleased": "0",
           "percentage": "0%",
           "method": "Measured",
-          "methodDesc":"Measurement Methodology already prescribed by the competent authority in a licence or an operating permit for that facility",
+          "methodDesc": "Measurement Methodology already prescribed by the competent authority in a licence or an operating permit for that facility",
           "confidentiality": "None"
         },
 
@@ -31,8 +30,6 @@
           "hasSource": true
         }
       }
-
-
     ],
 
     "water": [
@@ -42,13 +39,13 @@
         "threshold": "1kg",
 
         "details": {
-          "pollutant":"Nonylphenol and Nonylphenol ethoxylates (NP/NPEs)",
-          "total":"110kg",
+          "pollutant": "Nonylphenol and Nonylphenol ethoxylates (NP/NPEs)",
+          "total": "110kg",
           "threshold": "1kg",
           "accidentallyReleased": "0",
           "percentage": "0%",
           "method": "Calculated",
-          "methodDesc":"Other calculation methodology.",
+          "methodDesc": "Other calculation methodology.",
           "confidentiality": "None"
         }
       }
@@ -61,13 +58,13 @@
         "threshold": "100kg",
 
         "details": {
-          "pollutant":"Zinc and compounds (as Zn)",
+          "pollutant": "Zinc and compounds (as Zn)",
           "total": "3,460kg",
           "threshold": "100kg",
           "accidentallyReleased": "0",
           "percentage": "0%",
           "method": "Measured",
-          "methodDesc":"Other measurement methodology.",
+          "methodDesc": "Other measurement methodology.",
           "confidentiality": "None"
         }
       }
@@ -80,60 +77,56 @@
         "threshold": "20kg",
 
         "details": {
-          "pollutant":"Nickel and compounds (as Ni)",
-          "total":"24kg",
+          "pollutant": "Nickel and compounds (as Ni)",
+          "total": "24kg",
           "threshold": "20kg",
           "accidentallyReleased": "0",
           "percentage": "0%",
           "method": "Estimated",
-          "methodDesc":"Estimated.",
+          "methodDesc": "Estimated.",
           "confidentiality": "None"
         }
       }
     ],
 
     "wasteTransfers": [
-      {    
-            "nonhazardousdetails":{
-            "quantity": "134,982 TONNE",
-            "type": "Non hazardous waste",
-            "treatment": "Recovery",
-            "method":"Measured",
-            "methoddesc":"Measurement by weighing.",
-            "confidentiality":"None"
+      {
+        "nonhazardousdetails": {
+          "quantity": "134,982 TONNE",
+          "type": "Non hazardous waste",
+          "treatment": "Recovery",
+          "method": "Measured",
+          "methoddesc": "Measurement by weighing.",
+          "confidentiality": "None"
         },
-        
-            "domestichazardousdetails":{
-            "quantity": "7,026 TONNE",
-            "type": "Domestic hazardous waste",
-            "treatment": "Recovery",
-            "method":"Measured",
-            "methoddesc":"Measurement by weighing.",
-            "confidentiality":"None"
+
+        "domestichazardousdetails": {
+          "quantity": "7,026 TONNE",
+          "type": "Domestic hazardous waste",
+          "treatment": "Recovery",
+          "method": "Measured",
+          "methoddesc": "Measurement by weighing.",
+          "confidentiality": "None"
         },
-        
-        
-            "transboundaryhazardousdetails":{
-            "quantity": "5,788 TONNE",
-            "type": "Transbounday hazardous waste",
-            "treatment": "Recovery",
-            "method":"Measured",
-            "methoddesc":"Measurement Methodology already prescribed by the competent authority in a licence or an operating permit for that facility.",
-            "receiverCompany":"09010",
-            "site":"09010",
-            "confidentiality":"None"
-            }
+
+        "transboundaryhazardousdetails": {
+          "quantity": "5,788 TONNE",
+          "type": "Transbounday hazardous waste",
+          "treatment": "Recovery",
+          "method": "Measured",
+          "methoddesc": "Measurement Methodology already prescribed by the competent authority in a licence or an operating permit for that facility.",
+          "receiverCompany": "09010",
+          "site": "09010",
+          "confidentiality": "None"
         }
-      
-
+      }
     ]
-
   },
 
   "facilityDetails": {
     "activity": "5.c Disposal of non-hazardous waste",
     "ippcCode": "5.3",
-    "Coordinates (Lat, Lon)":"55.046479, -1.643142",
+    "Coordinates (Lat, Lon)": "55.046479, -1.643142",
     "NUTSregion": "Northumberland and Tyne and Wear (UKC2)",
     "NACEcode": "38.21 - Treatment and disposal of non-hazardous waste",
     "riverBasin": "Northumbria",
@@ -143,9 +136,9 @@
   "competentAuthorityDetails": {
     "name": "Environment Agency (EA)",
     "team": "Pollution Inventory team",
-    "address":"S9 4WF",
+    "address": "S9 4WF",
     "phone": "+44 03708506506",
-    "fax":"",
+    "fax": "",
     "email": "pollution.inventory@environment-agency.gov.uk"
   }
 }
