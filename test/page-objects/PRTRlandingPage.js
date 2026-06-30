@@ -1,61 +1,60 @@
-import BasePage from './BasePage.js';
+import BasePage from './BasePage.js'
 
 class PrtrLandingPage extends BasePage {
+  // ===== Navigation =====
+  async open() {
+    await super.open('')
+  }
 
-    // ===== Navigation =====
-    async open() {
-        await super.open('/');
-    }
+  // ===== Page Anchor =====
+  get heading() {
+    return $('h1=Search industrial pollutant emissions')
+  }
 
-    // ===== Page Anchor =====
-    get heading() {
-        return $('h1=UK Pollutant Release and Transfer Register (PRTR)');
-    }
+  // ===== Header =====
+  get serviceLink() {
+    return $('a.govuk-service-navigation__link')
+  }
 
-    // ===== Header =====
-    get serviceLink() {
-        return $('a.govuk-service-navigation__link');
-    }
+  get skipLink() {
+    return $('a.govuk-skip-link')
+  }
 
-    get skipLink() {
-        return $('a.govuk-skip-link');
-    }
+  // ===== Main Links =====
+  get searchLocationLink() {
+    return $('a[href="location-search"]')
+  }
 
-    // ===== Main Links =====
-    get searchLocationLink() {
-        return $('a[href="location-search"]');
-    }
+  get downloadDataLink() {
+    return $('a[href="/download-all-data-for-a-year/en"]')
+  }
 
-    get downloadDataLink() {
-        return $('a[href="download"]');
-    }
+  // ===== Footer =====
+  get clearDataLink() {
+    return $('footer a=Clear data')
+  }
 
-    // ===== Footer =====
-    get clearDataLink() {
-        return $('footer a=Clear data');
-    }
+  // ===== Page Actions =====
+  async waitForPageLoad() {
+    await this.waitForVisible(this.heading)
+  }
 
-    // ===== Page Actions =====
-    async waitForPageLoad() {
-        await this.waitForVisible(this.heading);
-    }
+  async goToSearchByLocation() {
+    await this.click(this.searchLocationLink)
+  }
 
-    async goToSearchByLocation() {
-        await this.click(this.searchLocationLink);
-    }
+  async goToDownloadData() {
+    await this.click(this.downloadDataLink)
+  }
 
-    async goToDownloadData() {
-        await this.click(this.downloadDataLink);
-    }
+  async clearSessionData() {
+    await this.click(this.clearDataLink)
+  }
 
-    async clearSessionData() {
-        await this.click(this.clearDataLink);
-    }
-
-    async navigateFromHeader() {
-        await this.click(this.serviceLink);
-    }
+  async navigateFromHeader() {
+    await this.click(this.serviceLink)
+  }
 }
 
 // ✅ Singleton export (standard WDIO pattern)
-export default new PrtrLandingPage();
+export default new PrtrLandingPage()
