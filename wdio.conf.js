@@ -1,3 +1,15 @@
+import path from 'path'
+
+const oneHour = 60 * 60 * 1000
+const debug = process.env.DEBUG
+const downloadDir = path.resolve('./downloads')
+
+const execArgv = ['--loader', 'esm-module-alias/loader']
+
+if (debug) {
+  execArgv.push('--inspect')
+}
+
 export const config = {
   //
   // ====================
@@ -45,7 +57,7 @@ export const config = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: 1,
+  // maxInstances: 1,
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -69,8 +81,20 @@ export const config = {
           '--disable-background-networking',
           '--disable-remote-fonts',
           '--ignore-certificate-errors',
-          '--host-resolver-rules=MAP www.googletagmanager.com 127.0.0.1'
-        ]
+          '--host-resolver-rules=MAP www.googletagmanager.com 127.0.0.1',
+          '--disable-popup-blocking',
+          '--disable-notifications',
+          '--disable-features=InsecureDownloadWarnings'
+        ],
+        prefs: {
+          'download.default_directory': downloadDir,
+          // 'download.default_directory': `${process.cwd()}\\downloads`,
+          'download.prompt_for_download': false,
+          'download.directory_upgrade': true,
+          'profile.default_content_setting_values.automatic_downloads': 1,
+          'safebrowsing.enabled': true,
+          'safebrowsing.disable_download_protection': true
+        }
       }
     }
   ],
@@ -172,7 +196,7 @@ export const config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: 60000
+    timeout: debug ? oneHour : 300000
   }
 
   //

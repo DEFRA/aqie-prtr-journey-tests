@@ -1,13 +1,18 @@
 import BasePage from './BasePage.js'
+import createLogger from '../helpers/logger.js'
+
+const logger = createLogger()
 
 class DownloadDataPage extends BasePage {
   // ===== URL =====
+
   async open() {
     await super.open('/public/iteration-1/download')
   }
+
   // ===== Page Anchor =====
+
   get heading() {
-    //return $('h1=Download all data for a year');
     return $('h1=Download all data for a year')
   }
 
@@ -23,6 +28,11 @@ class DownloadDataPage extends BasePage {
     return $(
       `//a[@data-testid="aq-button-secondary"][.//span[contains(normalize-space(),"Download ${year} data")]]`
     )
+  }
+
+  // ==== Back Link ===
+  get backLink() {
+    return $('a.govuk-back-link')
   }
 
   // ===== Actions =====
@@ -61,7 +71,7 @@ class DownloadDataPage extends BasePage {
 
     for (const el of elements) {
       const text = await el.getText()
-      console.log('Element text:', text)
+      logger.info('Element text:', text)
       const match = text.match(/\d{4}/)
       if (match) {
         years.push(match[0])
@@ -69,6 +79,13 @@ class DownloadDataPage extends BasePage {
     }
 
     return years
+  }
+
+  /**
+   * Clicks the Back link
+   */
+  async clickBackLink() {
+    await this.backLink.click()
   }
 }
 
