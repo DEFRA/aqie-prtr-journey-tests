@@ -37,10 +37,10 @@ export const config = {
     ['./test/specs/**/*.js']
   ],
   // Patterns to exclude.
-  exclude: 
+  exclude:
     // 'path/to/excluded/files'
     ['./test/specs/Phase1e2e.js', './test/specs/MigratedDataCheckE2E.js'],
-    
+
   //
   // ============
   // Capabilities
@@ -88,7 +88,7 @@ export const config = {
         ],
         prefs: {
           'download.default_directory': downloadDir,
-          'download.default_directory': `${process.cwd()}\\downloads`,
+          // 'download.default_directory': `${process.cwd()}\\downloads`,
           'download.prompt_for_download': false,
           'download.directory_upgrade': true,
           'profile.default_content_setting_values.automatic_downloads': 1,
