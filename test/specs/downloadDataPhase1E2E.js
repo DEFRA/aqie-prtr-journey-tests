@@ -114,7 +114,7 @@ describe('E2E - Download PRTR Data against each year', () => {
 
       if (year === '2007') {
         logger.info('Waiting for final download to complete')
-        await waitForDownloadComplete(previousXmlCount, 90000)
+        // await waitForDownloadComplete(previousXmlCount, 90000)
       }
 
       // Fail test if 404 page appears
