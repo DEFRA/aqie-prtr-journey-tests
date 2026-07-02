@@ -66,7 +66,7 @@ it('should validate non hazardous waste transfer details', async () => {
   await locationSearchPage.open()
 
   // eslint-disable-next-line
-  logger.info('After search URL:', await browser.getUrl()) 
+  logger.info('After search URL:', await browser.getUrl())
   // enter password
   await $('#password').setValue('release')
 
