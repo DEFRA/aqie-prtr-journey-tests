@@ -76,8 +76,7 @@ export const config = {
               '--window-size=1920,1080',
               '--disable-popup-blocking',
               '--disable-notifications',
-              '--disable-features=InsecureDownloadWarnings',
-
+              '--disable-features=InsecureDownloadWarnings'
             ],
             prefs: {
               'download.default_directory': downloadDir,

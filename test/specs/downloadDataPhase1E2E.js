@@ -1,9 +1,18 @@
 import PRTRlandingPage from '../page-objects/PRTRlandingPage.js'
 import DownloadDataPage from '../page-objects/DownloadDataPage.js'
 import PageNotFoundPage from '../page-objects/PageNotFoundPage.js'
+import createLogger from '../helpers/logger.js'
+import {
+  getDownloadedXmlCount,
+  waitForDownloadComplete
+} from '../helpers/downloadHelper.js'
+
+const logger = createLogger()
 
 describe('E2E - Download PRTR Data against each year', () => {
   it('should download all data against specific year', async () => {
+    logger.info('-------------Download PRTR Reports Journey Started--------')
+
     // Expected years from 2024 down to 2007
     const expectedYears = [
       '2024',
@@ -36,11 +45,15 @@ describe('E2E - Download PRTR Data against each year', () => {
       })
     )
 
-    //Click on Download Data link and navigate to Download data page
-    await PRTRlandingPage.goToDownloadData()
-    //await PRTRlandingPage.downloadDataLink.click();
+    logger.info(
+      'PRTR Landing page has been launched: ' +
+        PRTRlandingPage.heading.getText()
+    )
 
-    //Download Data against chosen year. Navigate to Download Data Page and assert
+    // Click on Download Data link and navigate to Download data page
+    await PRTRlandingPage.goToDownloadData()
+
+    // Download Data against chosen year. Navigate to Download Data Page and assert
     await DownloadDataPage.waitForPageLoad()
     await expect(
       DownloadDataPage.heading.toBeDisplayed({
@@ -49,12 +62,17 @@ describe('E2E - Download PRTR Data against each year', () => {
       })
     )
 
-    //Get the value of all the years within variable years
-    //array of strings containing available years.
+    logger.info(
+      'PRTR Download Data page has been launched: ' +
+        DownloadDataPage.heading.getText()
+    )
+
+    // Get the value of all the years within variable years
+    // array of strings containing available years.
     const years = await DownloadDataPage.getAllAvailableYears()
 
     // Display years in WDIO/spec report console output
-    console.log(`Available download years are: ${years.join(', ')}`)
+    logger.info(`Available download years are: ${years.join(', ')}`)
 
     // Assert total count
     expect(years.length).toBe(18)
@@ -65,7 +83,7 @@ describe('E2E - Download PRTR Data against each year', () => {
     // Assert each expected year exists
     for (const year of expectedYears) {
       expect(years).toContain(year)
-      console.log(`Verified download year is available: ${year}`)
+      logger.info(`Verified download year is available: ${year}`)
     }
 
     // Store current Download Data page URL before starting downloads
@@ -73,7 +91,7 @@ describe('E2E - Download PRTR Data against each year', () => {
 
     // Click download for each available year
     for (const year of years) {
-      console.log(`Downloading data for year: ${year}`)
+      logger.info(`Downloading data for year: ${year}`)
 
       // Ensure we are on the Download Data page before each click
       const currentUrl = await browser.getUrl()
@@ -85,13 +103,35 @@ describe('E2E - Download PRTR Data against each year', () => {
       }
 
       await DownloadDataPage.waitForPageLoad()
+
+      let previousXmlCount
+
+      if (year === '2007') {
+        previousXmlCount = getDownloadedXmlCount()
+      }
+
       await DownloadDataPage.clickDownloadByYear(year)
 
-      //Give browser app a moment to navigate if document is missing
-      await browser.pause(1000)
+      if (year === '2007') {
+        logger.info('Waiting for final download to complete')
+        await waitForDownloadComplete(previousXmlCount, 30000)
+      }
 
       // Fail test if 404 page appears
       await PageNotFoundPage.failIfDisplayed(year)
     }
+
+    //  Await and click on the Back Link to navigate back to the PRTR Landing Page
+    await DownloadDataPage.waitForPageLoad()
+    await DownloadDataPage.clickBackLink()
+    await PRTRlandingPage.waitForPageLoad()
+    await expect(
+      PRTRlandingPage.heading.toBeDisplayed({
+        message:
+          'Heading text does not match expected value for PRTR landing Page'
+      })
+    )
+
+    logger.info('-------------Download PRTR Reports Journey Completed--------')
   })
 })

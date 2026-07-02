@@ -1,4 +1,7 @@
 import BasePage from './BasePage.js'
+import createLogger from '../helpers/logger.js'
+
+const logger = createLogger()
 
 class FacilityDetailsPage extends BasePage {
   // ===== Page Anchor =====
@@ -74,10 +77,11 @@ class FacilityDetailsPage extends BasePage {
     }
 
     // ✅ Debug output
-    console.log('--- Available captions ---')
+
+    logger.info('--- Available captions ---')
     const allCaptions = await $$('caption')
     for (const cap of allCaptions) {
-      console.log(await cap.getText())
+      logger.info(await cap.getText())
     }
 
     throw new Error(`Table with caption '${captionText}' not found`)
