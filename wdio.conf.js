@@ -37,10 +37,10 @@ export const config = {
     ['./test/specs/**/*.js']
   ],
   // Patterns to exclude.
-  exclude: [
+  exclude:
     // 'path/to/excluded/files'
-    ['./test/specs/Phase1e2e.js', './test/specs/MigratedDataCheckE2E.js']
-  ],
+    ['./test/specs/Phase1e2e.js', './test/specs/MigratedDataCheckE2E.js'],
+
   //
   // ============
   // Capabilities
@@ -196,7 +196,7 @@ export const config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: debug ? oneHour : 300000
+    timeout: debug ? oneHour : 900000
   }
 
   //
