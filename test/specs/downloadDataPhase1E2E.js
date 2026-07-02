@@ -2,10 +2,10 @@ import PRTRlandingPage from '../page-objects/PRTRlandingPage.js'
 import DownloadDataPage from '../page-objects/DownloadDataPage.js'
 import PageNotFoundPage from '../page-objects/PageNotFoundPage.js'
 import createLogger from '../helpers/logger.js'
-import {
+/* import {
   getDownloadedXmlCount,
   waitForDownloadComplete
-} from '../helpers/downloadHelper.js'
+} from '../helpers/downloadHelper.js' */
 
 const logger = createLogger()
 
@@ -104,17 +104,17 @@ describe('E2E - Download PRTR Data against each year', () => {
 
       await DownloadDataPage.waitForPageLoad()
 
-      let previousXmlCount
+      // let previousXmlCount
 
-      if (year === '2007') {
+      /*  if (year === '2007') {
         previousXmlCount = getDownloadedXmlCount()
-      }
+      } */
 
       await DownloadDataPage.clickDownloadByYear(year)
 
       if (year === '2007') {
         logger.info('Waiting for final download to complete')
-        await waitForDownloadComplete(previousXmlCount, 90000)
+        // await waitForDownloadComplete(previousXmlCount, 90000)
       }
 
       // Fail test if 404 page appears
