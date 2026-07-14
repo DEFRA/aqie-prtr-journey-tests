@@ -63,7 +63,7 @@ export const config = {
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
   // https://saucelabs.com/platform/platform-configurator
   //
- capabilities: [
+  capabilities: [
     {
       maxInstances: 1,
       browserName: 'chrome',
@@ -100,7 +100,7 @@ export const config = {
   ],
 
   execArgv: debug ? ['--inspect'] : [],
- 
+
   //
   // ===================
   // Test Configurations
