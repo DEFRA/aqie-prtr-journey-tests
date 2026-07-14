@@ -63,61 +63,44 @@ export const config = {
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
   // https://saucelabs.com/platform/platform-configurator
   //
-
-  capabilities: debug
-    ? [
-        {
-          browserName: 'chrome',
-          'goog:chromeOptions': {
-            args: [
-              '--no-sandbox',
-              '--disable-infobars',
-              '--disable-gpu',
-              '--window-size=1920,1080',
-              '--disable-popup-blocking',
-              '--disable-notifications',
-              '--disable-features=InsecureDownloadWarnings'
-            ],
-            prefs: {
-              'download.default_directory': downloadDir,
-              // 'download.default_directory': `${process.cwd()}\\downloads`,
-              'download.prompt_for_download': false,
-              'download.directory_upgrade': true,
-              'profile.default_content_setting_values.automatic_downloads': 1,
-              'safebrowsing.enabled': true,
-              'safebrowsing.disable_download_protection': true
-            }
-          }
+ capabilities: [
+    {
+      maxInstances: 1,
+      browserName: 'chrome',
+      'goog:chromeOptions': {
+        args: [
+          '--no-sandbox',
+          '--disable-infobars',
+          '--disable-gpu',
+          '--window-size=1920,1080',
+          '--enable-features=NetworkService,NetworkServiceInProcess',
+          '--password-store=basic',
+          '--use-mock-keychain',
+          '--dns-prefetch-disable',
+          '--disable-background-networking',
+          '--disable-remote-fonts',
+          '--ignore-certificate-errors',
+          '--host-resolver-rules=MAP www.googletagmanager.com 127.0.0.1',
+          '--disable-popup-blocking',
+          '--disable-notifications',
+          '--disable-features=InsecureDownloadWarnings',
+          '--remote-debugging-port=9222'
+        ],
+        prefs: {
+          'download.default_directory': downloadDir,
+          // 'download.default_directory': `${process.cwd()}\\downloads`,
+          'download.prompt_for_download': false,
+          'download.directory_upgrade': true,
+          'profile.default_content_setting_values.automatic_downloads': 1,
+          'safebrowsing.enabled': true,
+          'safebrowsing.disable_download_protection': true
         }
-      ]
-    : [
-        {
-          maxInstances: 1,
-          browserName: 'chrome',
-          'goog:chromeOptions': {
-            args: [
-              '--no-sandbox',
-              '--disable-infobars',
-              '--disable-gpu',
-              '--window-size=1920,1080',
-              '--disable-popup-blocking',
-              '--disable-notifications',
-              '--disable-features=InsecureDownloadWarnings'
-            ],
-            prefs: {
-              'download.default_directory': `${process.cwd()}\\downloads`,
-              'download.prompt_for_download': false,
-              'download.directory_upgrade': true,
-              'profile.default_content_setting_values.automatic_downloads': 1,
-              'safebrowsing.enabled': true,
-              'safebrowsing.disable_download_protection': true
-            }
-          }
-        }
-      ],
+      }
+    }
+  ],
 
-  execArgv,
-
+  execArgv: debug ? ['--inspect'] : [],
+ 
   //
   // ===================
   // Test Configurations

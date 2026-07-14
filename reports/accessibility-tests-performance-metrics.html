@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Lighthouse Performance & SEO Dashboard</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    body { background-color:#f5f5f7; }
+    .wrapper-80 { max-width:80vw; margin:0 auto; }
+    .score-badge {
+      font-weight:600;
+      border-radius:999px;
+      padding:0.15rem 0.55rem;
+      font-size:0.8rem;
+    }
+    .score-good { background:#0c9b4b; color:#fff; }
+    .score-ok   { background:#f7a928; color:#000; }
+    .score-bad  { background:#d93025; color:#fff; }
+    .metric-label { font-size:0.8rem; text-transform:uppercase; color:#666; }
+    .metric-value { font-weight:600; }
+    .metric-sub { font-size:0.75rem; color:#777; }
+    .url-text { font-size:0.9rem; word-break:break-all; }
+  </style>
+</head>
+<body>
+  <div class="container-fluid py-4">
+    <div class="wrapper-80">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Lighthouse Performance & SEO</h1>
+        <span class="text-muted small">Generated: 2026-07-14T11:53:03.240Z</span>
+      </div>
+
+      
+    <div class="card mt-4 bg-light shadow-lg card mb-3">
+      <div class="card-header bg-white border-0 pb-0">
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="me-2">
+            <div class="text-muted text-uppercase small">Page</div>
+            <div class="url-text">https://aqie-prtr-frontend.test.cdp-int.defra.cloud/uk-pollutant-release-and-transfer-register/en[PRTR landing Page]</div>
+          </div>
+          <div class="text-end">
+            <div class="text-muted small">Scores</div>
+            <div>
+              <span class="score-badge score-good me-1">Perf 100</span>
+              <span class="score-badge score-good">SEO 90</span>
+              <span class="score-badge score-good me-1">A11y 100</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body pt-2 pb-1">
+        <div class="row g-2 mb-2">
+          <div class="col-md-4">
+            <div class="metric-label">FCP</div>
+            <div class="metric-value">1.1 s</div>
+            <div class="metric-sub">first-contentful-paint</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">LCP</div>
+            <div class="metric-value">1.1 s</div>
+            <div class="metric-sub">largest-contentful-paint</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">Speed Index</div>
+            <div class="metric-value">1.1 s</div>
+            <div class="metric-sub">speed-index</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">TBT</div>
+            <div class="metric-value">0 ms</div>
+            <div class="metric-sub">total-blocking-time</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">CLS</div>
+            <div class="metric-value">0</div>
+            <div class="metric-sub">cumulative-layout-shift</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">TTI</div>
+            <div class="metric-value">1.1 s</div>
+            <div class="metric-sub">interactive</div>
+          </div>
+        </div>
+        <div class="row g-2 mb-2">
+          <div class="col-md-4">
+            <div class="metric-label">TTFB</div>
+            <div class="metric-value">Root document took 70 ms</div>
+            <div class="metric-sub">Initial server response time was short</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">DOM Size</div>
+            <div class="metric-value">66</div>
+            <div class="metric-sub">dom-size</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">Total Bytes</div>
+            <div class="metric-value">
+              Total size was 42 KiB
+            </div>
+            <div class="metric-sub">total-byte-weight</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">JS Exec Time</div>
+            <div class="metric-value">0.0 s</div>
+            <div class="metric-sub">bootup-time</div>
+          </div>
+        </div>
+        <div class="mt-2">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="small text-muted">Diagnostics</span>
+            <span class="badge bg-light text-secondary badge-pill">
+              1 issues
+            </span>
+          </div>
+          <ul class="list-unstyled mb-0 small">
+            
+      <li class="mb-1">
+        <span class="badge bg-danger badge-pill me-1">Fail</span>
+        Eliminate render-blocking resources
+      </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card-footer bg-white border-0 pt-0">
+        <span class="small text-muted">
+          Device: mobile · Throttling: simulate
+        </span>
+      </div>
+    </div>
+
+    <div class="card mt-4 bg-light shadow-lg card mb-3">
+      <div class="card-header bg-white border-0 pb-0">
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="me-2">
+            <div class="text-muted text-uppercase small">Page</div>
+            <div class="url-text">https://aqie-prtr-frontend.test.cdp-int.defra.cloud/download-all-data-for-a-year/en[PRTR Download Data Page]</div>
+          </div>
+          <div class="text-end">
+            <div class="text-muted small">Scores</div>
+            <div>
+              <span class="score-badge score-good me-1">Perf 100</span>
+              <span class="score-badge score-good">SEO 90</span>
+              <span class="score-badge score-good me-1">A11y 100</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body pt-2 pb-1">
+        <div class="row g-2 mb-2">
+          <div class="col-md-4">
+            <div class="metric-label">FCP</div>
+            <div class="metric-value">1.0 s</div>
+            <div class="metric-sub">first-contentful-paint</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">LCP</div>
+            <div class="metric-value">1.1 s</div>
+            <div class="metric-sub">largest-contentful-paint</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">Speed Index</div>
+            <div class="metric-value">1.2 s</div>
+            <div class="metric-sub">speed-index</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">TBT</div>
+            <div class="metric-value">0 ms</div>
+            <div class="metric-sub">total-blocking-time</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">CLS</div>
+            <div class="metric-value">0</div>
+            <div class="metric-sub">cumulative-layout-shift</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">TTI</div>
+            <div class="metric-value">1.1 s</div>
+            <div class="metric-sub">interactive</div>
+          </div>
+        </div>
+        <div class="row g-2 mb-2">
+          <div class="col-md-4">
+            <div class="metric-label">TTFB</div>
+            <div class="metric-value">Root document took 150 ms</div>
+            <div class="metric-sub">Initial server response time was short</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">DOM Size</div>
+            <div class="metric-value">156</div>
+            <div class="metric-sub">dom-size</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">Total Bytes</div>
+            <div class="metric-value">
+              Total size was 42 KiB
+            </div>
+            <div class="metric-sub">total-byte-weight</div>
+          </div>
+          <div class="col-md-4">
+            <div class="metric-label">JS Exec Time</div>
+            <div class="metric-value">0.0 s</div>
+            <div class="metric-sub">bootup-time</div>
+          </div>
+        </div>
+        <div class="mt-2">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="small text-muted">Diagnostics</span>
+            <span class="badge bg-light text-secondary badge-pill">
+              1 issues
+            </span>
+          </div>
+          <ul class="list-unstyled mb-0 small">
+            
+      <li class="mb-1">
+        <span class="badge bg-warning text-dark badge-pill me-1">Warn</span>
+        Eliminate render-blocking resources
+      </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card-footer bg-white border-0 pt-0">
+        <span class="small text-muted">
+          Device: mobile · Throttling: simulate
+        </span>
+      </div>
+    </div>
+
+    </div>
+  </div>
+</body>
+</html>
