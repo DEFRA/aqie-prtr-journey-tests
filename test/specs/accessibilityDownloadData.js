@@ -42,7 +42,7 @@ describe('Accessibility E2E - Download PRTR Data against each year', () => {
     await analyseAccessibility('PRTR landing Page')
   })
 
-  it('Verify Accessibility against the PRTR Landing page ', async () => {
+  it('Verify Accessibility against the PRTR Download Data page ', async () => {
     await PRTRlandingPage.open()
     await PRTRlandingPage.waitForPageLoad()
 
