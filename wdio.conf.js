@@ -84,7 +84,8 @@ export const config = {
           '--host-resolver-rules=MAP www.googletagmanager.com 127.0.0.1',
           '--disable-popup-blocking',
           '--disable-notifications',
-          '--disable-features=InsecureDownloadWarnings'
+          '--disable-features=InsecureDownloadWarnings',
+          '--remote-debugging-port=9222'
         ],
         prefs: {
           'download.default_directory': downloadDir,
