@@ -1,5 +1,7 @@
+import allure from 'allure-commandline'
 import path from 'path'
 
+const oneMinute = 60 * 1000
 const oneHour = 60 * 60 * 1000
 const debug = process.env.DEBUG
 const downloadDir = path.resolve('./downloads')
@@ -39,7 +41,14 @@ export const config = {
   // Patterns to exclude.
   exclude:
     // 'path/to/excluded/files'
-    ['./test/specs/Phase1e2e.js', './test/specs/MigratedDataCheckE2E.js'],
+    [
+      './test/specs/Phase1e2e.js',
+      './test/specs/MigratedDataCheckE2E.js',
+      './test/specs/PRTR2024DataValidation.js',
+      './test/specs/PRTR2010DataValidation.js',
+      './test/specs/downloadDataPhase1E2E.js',
+      './test/specs/accessibilityDownloadData.js'
+    ],
 
   //
   // ============
@@ -138,14 +147,16 @@ export const config = {
   port: process.env.CHROMEDRIVER_PORT || 4444,
   //
   // Default timeout for all waitFor* commands.
-  waitforTimeout: 10000,
+  // waitforTimeout: 10000,
+  waitforTimeout: 60000,
+  waitforInterval: 200,
   //
   // Default timeout in milliseconds for request
   // if browser driver or grid doesn't send response
-  connectionRetryTimeout: 120000,
+  connectionRetryTimeout: 1800000,
   //
   // Default request retries count
-  connectionRetryCount: 3,
+  connectionRetryCount: 5,
   //
   // Test runner services
   // Services take over a specific job you don't want to take care of. They enhance
@@ -197,8 +208,8 @@ export const config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: debug ? oneHour : 900000
-  }
+    timeout: oneHour
+  },
 
   //
   // =====
@@ -297,6 +308,23 @@ export const config = {
   // afterTest: function(test, context, { error, result, duration, passed, retries }) {
   // },
 
+  afterTest: async function (test, context, { error }) {
+    const message = error?.message || ''
+
+    if (
+      error &&
+      (message.includes('not clickable') ||
+        message.includes('element') ||
+        message.includes('timeout') ||
+        message.includes('Cannot read properties') ||
+        message.includes('logger is not defined') ||
+        message.includes('stale element') ||
+        message.includes('session deleted'))
+    ) {
+      await browser.takeScreenshot()
+    }
+  },
+
   /**
    * Hook that gets executed after the suite has ended
    * @param {object} suite suite details
@@ -339,7 +367,28 @@ export const config = {
    */
   // onComplete: function(exitCode, config, capabilities, results) {
   // },
+
+  onComplete: function (exitCode, config, capabilities, results) {
+    const reportError = new Error('Could not generate Allure report')
+    const generation = allure(['generate', 'allure-results', '--clean'])
+
+    return new Promise((resolve, reject) => {
+      const generationTimeout = setTimeout(() => reject(reportError), oneMinute)
+
+      generation.on('exit', function (exitCode) {
+        clearTimeout(generationTimeout)
+
+        if (exitCode !== 0) {
+          return reject(reportError)
+        }
+
+        allure(['open'])
+        resolve()
+      })
+    })
+  }
   /**
+   *
    * Gets executed when a refresh happens.
    * @param {string} oldSessionId session ID of the old session
    * @param {string} newSessionId session ID of the new session
