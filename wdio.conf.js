@@ -41,8 +41,13 @@ export const config = {
   // Patterns to exclude.
   exclude:
     // 'path/to/excluded/files'
-    ['./test/specs/Phase1e2e.js', './test/specs/MigratedDataCheckE2E.js' , './test/specs/PRTR2024DataValidation.js',
-      './test/specs/PRTR2010DataValidation.js','./test/specs/downloadDataPhase1E2E.js', './test/specs/accessibilityDownloadData.js'
+    [
+      './test/specs/Phase1e2e.js',
+      './test/specs/MigratedDataCheckE2E.js',
+      './test/specs/PRTR2024DataValidation.js',
+      './test/specs/PRTR2010DataValidation.js',
+      './test/specs/downloadDataPhase1E2E.js',
+      './test/specs/accessibilityDownloadData.js'
     ],
 
   //
@@ -364,26 +369,26 @@ export const config = {
   // },
 
   onComplete: function (exitCode, config, capabilities, results) {
-      const reportError = new Error('Could not generate Allure report')
-      const generation = allure(['generate', 'allure-results', '--clean'])
-  
-      return new Promise((resolve, reject) => {
-        const generationTimeout = setTimeout(() => reject(reportError), oneMinute)
-  
-        generation.on('exit', function (exitCode) {
-          clearTimeout(generationTimeout)
-  
-          if (exitCode !== 0) {
-            return reject(reportError)
-          }
-  
-          allure(['open'])
-          resolve()
-        })
+    const reportError = new Error('Could not generate Allure report')
+    const generation = allure(['generate', 'allure-results', '--clean'])
+
+    return new Promise((resolve, reject) => {
+      const generationTimeout = setTimeout(() => reject(reportError), oneMinute)
+
+      generation.on('exit', function (exitCode) {
+        clearTimeout(generationTimeout)
+
+        if (exitCode !== 0) {
+          return reject(reportError)
+        }
+
+        allure(['open'])
+        resolve()
       })
-    }
+    })
+  }
   /**
-   * 
+   *
    * Gets executed when a refresh happens.
    * @param {string} oldSessionId session ID of the old session
    * @param {string} newSessionId session ID of the new session
