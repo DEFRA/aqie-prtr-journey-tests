@@ -4,148 +4,269 @@ import createLogger from '../helpers/logger.js'
 const logger = createLogger()
 
 class FacilityDetailsPage extends BasePage {
-  // ===== Page Anchor =====
+  // ==========================================
+  // Page Elements
+  // ==========================================
+
   get heading() {
     return $('h1')
   }
 
-  // ===== Year Navigation =====
-  get yearLinks() {
-    return $$('.moj-sub-navigation__link')
-  }
-
-  yearLink(year) {
-    return $(`.moj-sub-navigation__link=${year}`)
-  }
-
-  // ===== Tables =====
   get tables() {
     return $$('table.govuk-table')
   }
 
-  tableByCaption(captionText) {
-    return $(`table.govuk-table caption=${captionText}`)
-  }
-
-  // ===== Actions =====
+  // ==========================================
+  // Page Load
+  // ==========================================
 
   async waitForPageLoad() {
     await this.waitForVisible(this.heading)
   }
 
-  /**
-   * ✅ Validate facility name (VERY IMPORTANT)
-   */
+  // ==========================================
+  // Facility Details
+  // ==========================================
+
+  async getFacilityName() {
+    return (await this.heading.getText()).trim()
+  }
+
   async validateFacilityName(expectedName) {
-    const text = await this.heading.getText()
+    const actualName = await this.getFacilityName()
 
-    if (!text.includes(expectedName)) {
-      throw new Error(`Expected facility '${expectedName}' but found '${text}'`)
-    }
+    expect(actualName).toContain(expectedName)
   }
 
-  /**
-   * ✅ Select year dynamically
-   */
-  async selectYear(year) {
-    const yearElement = this.yearLink(year)
-    await this.click(yearElement)
-  }
+  // ==========================================
+  // Year Navigation
+  // ==========================================
 
-  /**
-   * ✅ Get table by caption text
-   */
-  async getTableByCaption(captionText) {
-    // wait until at least one table is present
-    await browser.waitUntil(async () => (await this.tables).length > 0, {
-      timeout: 10000,
-      timeoutMsg: 'No tables found on page'
-    })
-
-    const tables = await this.tables
-
-    for (const table of tables) {
-      const captionEl = await table.$('caption')
-
-      if (await captionEl.isExisting()) {
-        const caption = (await captionEl.getText()).trim().toLowerCase()
-
-        if (caption.includes(captionText.toLowerCase())) {
-          return table
-        }
-      }
-    }
-
-    // ✅ Debug output
-
-    logger.info('--- Available captions ---')
-    const allCaptions = await $$('caption')
-    for (const cap of allCaptions) {
-      logger.info(await cap.getText())
-    }
-
-    throw new Error(`Table with caption '${captionText}' not found`)
-  }
-
-  /**
-   * ✅ Click "View details" inside table row (pollutant-based)
-   */
-  async clickViewDetailsByPollutant(captionText, pollutantName) {
-    const table = await this.getTableByCaption(captionText)
-
-    const rows = await table.$$('tbody tr')
-
-    for (const row of rows) {
-      const pollutantCell = await row.$('td:first-child')
-
-      if (!(await pollutantCell.isExisting())) continue
-
-      const text = (await pollutantCell.getText()).trim().toLowerCase()
-
-      if (text.includes(pollutantName.toLowerCase())) {
-        const viewLink = await row.$('td:last-child a')
-
-        await viewLink.waitForClickable({ timeout: 5000 })
-        await viewLink.click()
-        return
-      }
-    }
-
-    throw new Error(
-      `Pollutant '${pollutantName}' not found in table '${captionText}'`
+  selectedYear(year) {
+    return $(
+      `//nav[@data-testid='year-tabs']//span[normalize-space()='${year}']`
     )
   }
 
-  /**
-   * ✅ Click "View details" for Waste Transfers table
-   */
-  async clickViewDetailsByWasteType(wasteType) {
-    const table = await this.getTableByCaption('Waste transfers')
-    const rows = await table.$$('tbody tr')
+  yearLink(year) {
+    return $(`//nav[@data-testid='year-tabs']//a[normalize-space()='${year}']`)
+  }
 
-    for (const row of rows) {
-      const wasteCell = await row.$('td:nth-child(2)')
-      const text = await wasteCell.getText()
+  async selectYear(year) {
+    const selectedYear = await this.selectedYear(year)
 
-      if (text.includes(wasteType)) {
-        const viewLink = await row.$('td:last-child a')
-        await this.click(viewLink)
-        return
+    if (await selectedYear.isExisting()) {
+      logger.info(`Year ${year} is the last reporting year for this facility`)
+      return
+    }
+
+    const yearLink = await this.yearLink(year)
+
+    if (await yearLink.isExisting()) {
+      await this.click(yearLink)
+
+      logger.info(`Year ${year} selected`)
+      return
+    }
+
+    throw new Error(`Year ${year} is not listed for this facility`)
+  }
+
+  // ==========================================
+  // Section Availability
+  // ==========================================
+
+  async hasAirReleases() {
+    return (
+      (await $$('//h3[contains(.,"Pollutant releases to air")]')).length > 0
+    )
+  }
+
+  async hasWaterReleases() {
+    return (
+      (await $$('//h3[contains(.,"Pollutant releases to water")]')).length > 0
+    )
+  }
+
+  async hasSoilReleases() {
+    return (
+      (await $$('//h3[contains(.,"Pollutant releases to soil")]')).length > 0
+    )
+  }
+
+  async hasPollutantTransfers() {
+    return (
+      (await $$('//h3[contains(.,"Pollutant transfers to waste water")]'))
+        .length > 0
+    )
+  }
+
+  async hasWasteTransfers() {
+    return (await $$('//h3[contains(.,"Waste transfers")]')).length > 0
+  }
+
+  // ==========================================
+  // Helpers
+  // ==========================================
+
+  parseQuantityAndUnit(text) {
+    const cleaned = text.replace(/\u00A0/g, ' ').trim()
+
+    const match = cleaned.match(/^([\d,.]+)\s*([A-Za-z]+)$/i)
+
+    if (!match) {
+      return {
+        quantity: 0,
+        unit: null
       }
     }
 
-    throw new Error(`Waste type '${wasteType}' not found`)
+    return {
+      quantity: Number(match[1].replace(/,/g, '')),
+      unit: match[2]
+    }
   }
 
-  /**
-   * ✅ Download data button
-   */
-  get downloadButton() {
-    return $('a[role="button"]')
+  async getTableAfterHeading(headingText) {
+    const table = await $(
+      `//h3[contains(normalize-space(), "${headingText}")]
+       /following-sibling::table[1]`
+    )
+
+    await table.waitForDisplayed()
+
+    return table
   }
 
-  async downloadData() {
-    await this.click(this.downloadButton)
+  async getPollutantTableData(headingText) {
+    const table = await this.getTableAfterHeading(headingText)
+
+    const rows = await table.$$('tbody tr')
+
+    const data = []
+
+    for (const row of rows) {
+      const cells = await row.$$('td')
+
+      const pollutant = await cells[0].getText()
+
+      const quantityText = await cells[1].getText()
+
+      const parsed = this.parseQuantityAndUnit(quantityText)
+
+      data.push({
+        pollutant,
+        quantity: parsed.quantity,
+        unit: parsed.unit
+      })
+    }
+
+    return data
+  }
+
+  // ==========================================
+  // Air Releases
+  // ==========================================
+
+  async getAirReleases() {
+    if (!(await this.hasAirReleases())) {
+      return []
+    }
+
+    return this.getPollutantTableData('Pollutant releases to air')
+  }
+
+  // ==========================================
+  // Water Releases
+  // ==========================================
+
+  async getWaterReleases() {
+    if (!(await this.hasWaterReleases())) {
+      return []
+    }
+
+    return this.getPollutantTableData('Pollutant releases to water')
+  }
+
+  // ==========================================
+  // Soil Releases
+  // ==========================================
+
+  async getSoilReleases() {
+    if (!(await this.hasSoilReleases())) {
+      return []
+    }
+
+    return this.getPollutantTableData('Pollutant releases to soil')
+  }
+
+  // ==========================================
+  // Pollutant Transfers
+  // ==========================================
+
+  async getPollutantTransfers() {
+    if (!(await this.hasPollutantTransfers())) {
+      return []
+    }
+
+    return this.getPollutantTableData('Pollutant transfers to waste water')
+  }
+
+  // ==========================================
+  // Waste Transfers
+  // ==========================================
+
+  async getWasteTransfers() {
+    if (!(await this.hasWasteTransfers())) {
+      return []
+    }
+
+    const table = await $('table[data-testid="waste-table"]')
+
+    const rows = await table.$$('tbody tr')
+
+    const data = []
+
+    for (const row of rows) {
+      const cells = await row.$$('td')
+
+      const quantityText = await cells[0].getText()
+
+      const wasteType = await cells[1].getText()
+
+      const treatment = await cells[2].getText()
+
+      const parsed = this.parseQuantityAndUnit(quantityText)
+
+      data.push({
+        wasteType,
+        treatment,
+        quantity: parsed.quantity,
+        unit: parsed.unit
+      })
+    }
+
+    return data
+  }
+
+  // ==========================================
+  // Totals & Utilities
+  // ==========================================
+
+  getTotalQuantity(records) {
+    return records.reduce((total, row) => total + row.quantity, 0)
+  }
+
+  getUnit(records) {
+    return records.length > 0 ? records[0].unit : null
+  }
+
+  getWasteTransferQuantity(records, wasteType, treatment) {
+    const record = records.find(
+      (item) => item.wasteType === wasteType && item.treatment === treatment
+    )
+
+    return record ? record.quantity : null
   }
 }
 

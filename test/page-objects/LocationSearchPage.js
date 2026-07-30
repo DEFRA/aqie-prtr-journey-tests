@@ -3,7 +3,7 @@ import BasePage from './BasePage.js'
 class LocationSearchPage extends BasePage {
   // ===== URL =====
   async open() {
-    await super.open('/public/iteration-1/location-search')
+    await super.open('/finder/appliances/en')
   }
 
   // ===== Page Anchor =====

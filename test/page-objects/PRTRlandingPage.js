@@ -21,8 +21,9 @@ class PrtrLandingPage extends BasePage {
   }
 
   // ===== Main Links =====
-  get searchLocationLink() {
-    return $('a[href="location-search"]')
+
+  get searchFacilityLink() {
+    return $('a[href="/search-facility"]')
   }
 
   get downloadDataLink() {
@@ -37,6 +38,13 @@ class PrtrLandingPage extends BasePage {
   // ===== Page Actions =====
   async waitForPageLoad() {
     await this.waitForVisible(this.heading)
+  }
+
+  async clickSearchFacility() {
+    await this.searchFacilityLink.waitForClickable({
+      timeout: 10000
+    })
+    await this.searchFacilityLink.click()
   }
 
   async goToSearchByLocation() {

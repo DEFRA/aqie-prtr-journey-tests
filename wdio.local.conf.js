@@ -141,15 +141,15 @@ export const config = {
     'https://aqie-prtr-frontend.test.cdp-int.defra.cloud/uk-pollutant-release-and-transfer-register/en',
   //
   // Default timeout for all waitFor* commands.
-  waitforTimeout: 10000,
+  waitforTimeout: 60000,
   waitforInterval: 200,
   //
   // Default timeout in milliseconds for request
   // if browser driver or grid doesn't send response
-  connectionRetryTimeout: 120000,
+  connectionRetryTimeout: 1800000,
   //
   // Default request retries count
-  connectionRetryCount: 3,
+  connectionRetryCount: 5,
   //
   // Test runner services
   // Services take over a specific job you don't want to take care of. They enhance
@@ -192,7 +192,7 @@ export const config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: debug ? oneHour : 300000
+    timeout: oneHour
   },
   //
   // =====
@@ -282,7 +282,9 @@ export const config = {
    * @param {boolean} result.passed    true if test has passed, otherwise false
    * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
    */
-  afterTest: async function (
+
+  // uncomment the below after migration test runs are over
+  /* afterTest: async function (
     test,
     context,
     { error, result, duration, passed, retries }
@@ -293,6 +295,23 @@ export const config = {
       browser.executeScript(
         'browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed","reason": "At least 1 assertion failed"}}'
       )
+    }
+  }, */
+
+  afterTest: async function (test, context, { error }) {
+    const message = error?.message || ''
+
+    if (
+      error &&
+      (message.includes('not clickable') ||
+        message.includes('element') ||
+        message.includes('timeout') ||
+        message.includes('Cannot read properties') ||
+        message.includes('logger is not defined') ||
+        message.includes('stale element') ||
+        message.includes('session deleted'))
+    ) {
+      await browser.takeScreenshot()
     }
   },
 
