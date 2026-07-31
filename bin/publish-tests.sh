@@ -5,6 +5,7 @@ DIRECTORY="$PWD/allure-report"
 echo "Publishing test results to S3"
 
 if [ -n "$RESULTS_OUTPUT_S3_PATH" ]; then
+
    if [ -d "$DIRECTORY" ]; then
       aws s3 cp --quiet "$DIRECTORY" "$RESULTS_OUTPUT_S3_PATH" --recursive
       echo "Test results published to $RESULTS_OUTPUT_S3_PATH"
@@ -12,6 +13,17 @@ if [ -n "$RESULTS_OUTPUT_S3_PATH" ]; then
       echo "$DIRECTORY is not found"
       exit 1
    fi
+
+   # Upload logs
+   if [ -d "$PWD/logs" ]; then
+      aws s3 cp --quiet "$PWD/logs" "$RESULTS_OUTPUT_S3_PATH/logs" --recursive
+      echo "Log files published"
+
+      rm -f "$PWD/logs"/*.csv
+      rm -f "$PWD/logs"/*.txt
+      echo "Log files cleaned up"
+   fi
+
 else
    echo "RESULTS_OUTPUT_S3_PATH is not set"
    exit 1
