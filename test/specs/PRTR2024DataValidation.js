@@ -8,11 +8,14 @@ import FacilitiesDetailsPage from '../page-objects/FacilitiesDetailsPage.js'
 import SearchByFacility from '../page-objects/SearchByFacility.js'
 import FacilityUtils from '../utils/FacilityUtils.js'
 import FacilityValidator from '../validators/FacilityValidator.js'
-import fs from 'node:fs'
+import MigrationValidationReportWriter from '../utils/MigrationValidationReportWriter.js'
+import ReportWriter from '../utils/ReportWriter.js'
+
+const reportPrefix = 'PRTR_2024'
 
 const logger = createLogger()
 
-describe('PRTR 2024 Validation', () => {
+describe('PRTR 2024 Migration Data Validation', () => {
   let facilityLookup
 
   const excelFile = './test/test-data/PRTR_2024.xlsx'
@@ -20,7 +23,7 @@ describe('PRTR 2024 Validation', () => {
 
   const facilities = ExcelUtils.getSheetData(excelFile, sheetName)
 
-  const facilityLimit = Number(process.env.FACILITY_LIMIT) || 10
+  const facilityLimit = Number(process.env.FACILITY_LIMIT) || facilities.length
 
   const executionSummary = {
     processed: 0,
@@ -39,287 +42,230 @@ describe('PRTR 2024 Validation', () => {
     logger.info(`Lookup Size: ${facilityLookup.size}`)
   })
 
-  it('should validate PRTR 2024 facilities against Excel', async function () {
-    this.timeout(0)
+  describe('PRTR 2024 Facilities Data List verification against Production download', () => {
+    // -------------------------- Test Case 1 --------------------------------------------//
 
-    //
-    // Open PRTR
-    //
-    await PRTRlandingPage.open()
-    await PRTRlandingPage.waitForPageLoad()
-
-    //
-    // Navigate to Facility Search
-    //
-    await PRTRlandingPage.clickSearchFacility()
-
-    //
-    // Search By Year
-    //
-    await FacilitiesSearch.selectSearchType('year')
-    await FacilitiesSearch.clickContinue()
-
-    //
-    // Enter Reporting Year
-    //
-    await SearchByYear.searchByYear('2024')
-
-    //
-    // Wait for Results
-    //
-    await FacilitiesResultsPage.waitForPageLoad()
-
-    const headingText = await FacilitiesResultsPage.heading.getText()
-
-    expect(headingText).toContain('Facilities matching 2024')
-
-    const totalRecords = await FacilitiesResultsPage.getTotalRecords()
-
-    expect(totalRecords).toBeGreaterThan(0)
-
-    const allFacilities = []
-    let pageCount = 0
-
-    //
-    // Process all pages
-    //
-    while (true) {
-      const facilities =
-        await FacilitiesResultsPage.getFacilitiesOnCurrentPage()
-
-      expect(facilities.length).toBeGreaterThan(0)
-
-      allFacilities.push(...facilities)
-
-      pageCount++
-
-      if (pageCount % 25 === 0) {
-        logger.info(
-          `Processed ${pageCount} pages. Facilities collected: ${allFacilities.length}`
-        )
-      }
-
-      if (!(await FacilitiesResultsPage.hasNextPage())) {
-        break
-      }
-
-      await FacilitiesResultsPage.clickNextPage()
-    }
-
-    const discrepancies = []
-
-    for (const facility of allFacilities) {
-      const exists = ExcelUtils.valueExists(
-        facilityLookup,
-        facility.facilityName
-      )
-
-      if (!exists) {
-        discrepancies.push({
-          facilityName: facility.facilityName,
-          activity: facility.activity,
-          reporting: facility.reporting
-        })
-      }
-    }
-
-    logger.info(`Total Records Reported By Website: ${totalRecords}`)
-
-    logger.info(`Pages Processed: ${pageCount}`)
-
-    logger.info(`Facilities Checked: ${allFacilities.length}`)
-
-    logger.info(`Discrepancies Found: ${discrepancies.length}`)
-
-    if (discrepancies.length > 0) {
-      logger.info('===== FACILITY NAMES START =====')
-
-      logger.info(discrepancies.map((item) => item.facilityName).join('\n'))
-
-      logger.info('===== FACILITY NAMES END =====')
-    }
-
-    //
-    // Temporary assertion while analysing discrepancies
-    //
-    expect(allFacilities.length).toBeGreaterThan(0)
-  })
-
-  facilities.slice(0, facilityLimit).forEach((row) => {
-    it(`should validate ${row.FacilityFinal}`, async function () {
+    it('Should validate PRTR 2024 facilities list against Production Data', async function () {
       this.timeout(0)
 
-      const validationErrors = []
-      const validationWarnings = []
+      //
+      // Open PRTR
+      //
+      await PRTRlandingPage.open()
+      await PRTRlandingPage.waitForPageLoad()
 
-      const facilityName = row.FacilityFinal
+      //
+      // Navigate to Facility Search
+      //
+      await PRTRlandingPage.clickSearchFacility()
 
-      const searchFacilityName =
-        FacilityUtils.getSearchableFacilityName(facilityName)
+      //
+      // Search By Year
+      //
+      await FacilitiesSearch.selectSearchType('year')
+      await FacilitiesSearch.clickContinue()
 
-      try {
-        logger.info(`Starting validation for ${facilityName}`)
+      //
+      // Enter Reporting Year
+      //
+      await SearchByYear.searchByYear('2024')
 
-        await PRTRlandingPage.open()
+      //
+      // Wait for Results
+      //
+      await FacilitiesResultsPage.waitForPageLoad()
 
-        await PRTRlandingPage.waitForPageLoad()
+      const headingText = await FacilitiesResultsPage.heading.getText()
 
-        await PRTRlandingPage.clickSearchFacility()
+      expect(headingText).toContain('Facilities matching 2024')
 
-        await FacilitiesSearch.selectSearchType('name')
+      const totalRecords = await FacilitiesResultsPage.getTotalRecords()
 
-        await FacilitiesSearch.clickContinue()
+      expect(totalRecords).toBeGreaterThan(0)
 
-        await SearchByFacility.searchFacility(searchFacilityName)
+      const allFacilities = []
+      let pageCount = 0
 
-        await FacilitiesResultsPage.waitForPageLoad()
+      //
+      // Process all pages
+      //
+      while (true) {
+        const facilities =
+          await FacilitiesResultsPage.getFacilitiesOnCurrentPage()
 
-        await FacilitiesResultsPage.clickViewByFacility(searchFacilityName)
+        expect(facilities.length).toBeGreaterThan(0)
 
-        await FacilitiesDetailsPage.waitForPageLoad()
+        allFacilities.push(...facilities)
 
-        logger.info(
-          `Validating Facility: ${await FacilitiesDetailsPage.getFacilityName()}`
-        )
+        pageCount++
 
-        const result = await FacilityValidator.validateFacility(
-          facilityName,
-          row,
-          validationErrors,
-          validationWarnings
-        )
-
-        result.warnings.forEach((msg) => logger.warn(msg))
-
-        result.errors.forEach((msg) => logger.error(msg))
-
-        if (result.warnings.length > 0) {
-          executionSummary.warnings.push({
-            facility: facilityName,
-            warnings: result.warnings
-          })
-        }
-
-        if (result.errors.length > 0) {
-          throw new Error(
-            `Validation failed for ${facilityName}\n\n${result.errors.join('\n')}`
+        if (pageCount % 25 === 0) {
+          logger.info(
+            `Processed ${pageCount} pages. Facilities collected: ${allFacilities.length}`
           )
         }
 
-        executionSummary.processed++
+        if (!(await FacilitiesResultsPage.hasNextPage())) {
+          break
+        }
 
-        executionSummary.passed.push(facilityName)
-
-        logger.info(`[${facilityName}] Validation completed successfully`)
-      } catch (error) {
-        executionSummary.processed++
-
-        executionSummary.failed.push({
-          facility: facilityName,
-          error: error.message
-        })
-
-        throw error
+        await FacilitiesResultsPage.clickNextPage()
       }
+
+      const discrepancies = []
+
+      for (const facility of allFacilities) {
+        const exists = ExcelUtils.valueExists(
+          facilityLookup,
+          facility.facilityName
+        )
+
+        if (!exists) {
+          discrepancies.push({
+            facilityName: facility.facilityName,
+            activity: facility.activity,
+            reporting: facility.reporting
+          })
+        }
+      }
+
+      logger.info(`Total Records Reported By Website: ${totalRecords}`)
+
+      logger.info(`Pages Processed: ${pageCount}`)
+
+      logger.info(`Facilities Checked: ${allFacilities.length}`)
+
+      logger.info(`Discrepancies Found: ${discrepancies.length}`)
+
+      //
+      // Create discrepancy report regardless of result
+      //
+      const discrepancyRows = ['FacilityName,Activity,Reporting']
+
+      discrepancies.forEach((item) => {
+        discrepancyRows.push(
+          `"${String(item.facilityName || '').replace(/"/g, '""')}","${String(item.activity || '').replace(/"/g, '""')}","${String(item.reporting || '').replace(/"/g, '""')}"`
+        )
+      })
+
+      const discrepancyFile = `./logs/${reportPrefix}_Facility_List_Discrepancies.csv`
+
+      ReportWriter.writeCsvFile(discrepancyFile, discrepancyRows)
+
+      MigrationValidationReportWriter.attachDiscrepancyReport(
+        discrepancyFile,
+        reportPrefix,
+        'Facility List Discrepancies'
+      )
+
+      logger.info(`Facility discrepancy report written to ${discrepancyFile}`)
+
+      if (discrepancies.length > 0) {
+        logger.info('===== FACILITY NAMES START =====')
+
+        logger.info(discrepancies.map((item) => item.facilityName).join('\n'))
+
+        logger.info('===== FACILITY NAMES END =====')
+      }
+
+      //
+      // Temporary assertion while analysing discrepancies
+      //
+      expect(allFacilities.length).toBeGreaterThan(0)
+
+      // Enable later when reconciliation is complete
+      // expect(discrepancies.length).toBe(0)
     })
-  })
 
-  after(() => {
-    logger.info('=======================================')
+    describe('PRTR 2024 Facilities PRTR Data Validation against Production download', () => {
+      // -------------------------Test Case2 -----------------------------------------------------//
+      facilities.slice(0, facilityLimit).forEach((row) => {
+        it(`Should validate PRTR release and transferdata against Facility ${row.FacilityFinal} for 2024`, async function () {
+          this.timeout(0)
 
-    logger.info('PRTR VALIDATION EXECUTION SUMMARY')
+          const validationErrors = []
+          const validationWarnings = []
 
-    logger.info('=======================================')
+          const facilityName = row.FacilityFinal
 
-    logger.info(`Facilities Processed : ${executionSummary.processed}`)
+          const searchFacilityName =
+            FacilityUtils.getSearchableFacilityName(facilityName)
 
-    logger.info(`Facilities Passed    : ${executionSummary.passed.length}`)
+          try {
+            logger.info(`Starting validation for ${facilityName}`)
 
-    logger.info(`Facilities Failed    : ${executionSummary.failed.length}`)
+            await PRTRlandingPage.open()
 
-    logger.info(
-      `Facilities With Warnings : ${executionSummary.warnings.length}`
-    )
+            await PRTRlandingPage.waitForPageLoad()
 
-    const totalWarnings = executionSummary.warnings.reduce(
-      (count, item) => count + item.warnings.length,
-      0
-    )
+            await PRTRlandingPage.clickSearchFacility()
 
-    logger.info(`Total Warning Count : ${totalWarnings}`)
+            await FacilitiesSearch.selectSearchType('name')
 
-    logger.info('=======================================')
+            await FacilitiesSearch.clickContinue()
 
-    if (executionSummary.failed.length > 0) {
-      logger.info('===== FAILED FACILITIES =====')
+            await SearchByFacility.searchFacility(searchFacilityName)
 
-      executionSummary.failed.forEach((item) => {
-        logger.error(`Facility: ${item.facility}`)
+            await FacilitiesResultsPage.waitForPageLoad()
 
-        logger.error(`Issue: ${item.error}`)
+            await FacilitiesResultsPage.clickViewByFacility(searchFacilityName)
 
-        logger.error('--------------------------------')
+            await FacilitiesDetailsPage.waitForPageLoad()
+
+            await FacilitiesDetailsPage.selectYear('2024')
+
+            logger.info(
+              `Validating Facility: ${await FacilitiesDetailsPage.getFacilityName()}`
+            )
+
+            const result = await FacilityValidator.validateFacility(
+              facilityName,
+              row,
+              validationErrors,
+              validationWarnings
+            )
+
+            result.warnings.forEach((msg) => logger.warn(msg))
+
+            result.errors.forEach((msg) => logger.error(msg))
+
+            if (result.warnings.length > 0) {
+              executionSummary.warnings.push({
+                facility: facilityName,
+                warnings: result.warnings
+              })
+            }
+
+            if (result.errors.length > 0) {
+              throw new Error(
+                `Validation failed for ${facilityName}\n\n${result.errors.join('\n')}`
+              )
+            }
+
+            executionSummary.processed++
+
+            executionSummary.passed.push(facilityName)
+
+            logger.info(`[${facilityName}] Validation completed successfully`)
+          } catch (error) {
+            executionSummary.processed++
+
+            executionSummary.failed.push({
+              facility: facilityName,
+              error: error.message
+            })
+
+            throw error
+          }
+        })
       })
-    }
 
-    if (executionSummary.warnings.length > 0) {
-      logger.info('===== WARNING FACILITIES =====')
-
-      executionSummary.warnings.forEach((item) => {
-        logger.warn(`Facility: ${item.facility}`)
-
-        item.warnings.forEach((warning) => logger.warn(warning))
-
-        logger.warn('--------------------------------')
+      after(() => {
+        MigrationValidationReportWriter.writeExecutionSummary(
+          executionSummary,
+          reportPrefix
+        )
       })
-    }
-
-    logger.info('=======================================')
-
-    try {
-      const summaryReport = `
-  PRTR VALIDATION EXECUTION SUMMARY
-
-  Facilities Processed : ${executionSummary.processed}
-  Facilities Passed    : ${executionSummary.passed.length}
-  Facilities Failed    : ${executionSummary.failed.length}
-  Facilities With Warnings : ${executionSummary.warnings.length}
-  Total Warning Count : ${totalWarnings}
-  `
-
-      fs.writeFileSync('./logs/summary.txt', summaryReport)
-
-      const failureReport = executionSummary.failed
-        .map(
-          (item) => `
-  Facility: ${item.facility}
-
-  Issue:${item.error}
-
-  --------------------------------
-  `
-        )
-        .join('\n')
-
-      fs.writeFileSync('./logs/failures.txt', failureReport)
-
-      const warningReport = executionSummary.warnings
-        .map(
-          (item) => `
-  Facility: ${item.facility}
-
-  Warnings:${item.warnings.join('\n')}
-
-  --------------------------------
-  `
-        )
-        .join('\n')
-
-      fs.writeFileSync('./logs/warnings.txt', warningReport)
-
-      logger.info('Validation reports written to ./logs')
-    } catch (error) {
-      logger.error(`Unable to write reports: ${error.message}`)
-    }
+    })
   })
 })

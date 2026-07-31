@@ -19,9 +19,6 @@ if [ -n "$RESULTS_OUTPUT_S3_PATH" ]; then
       aws s3 cp --quiet "$PWD/logs" "$RESULTS_OUTPUT_S3_PATH/logs" --recursive
       echo "Log files published"
 
-      rm -f "$PWD/logs"/*.csv
-      rm -f "$PWD/logs"/*.txt
-      echo "Log files cleaned up"
    fi
 
 else
