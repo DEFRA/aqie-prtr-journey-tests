@@ -11,15 +11,15 @@ import FacilityValidator from '../validators/FacilityValidator.js'
 import MigrationValidationReportWriter from '../utils/MigrationValidationReportWriter.js'
 import ReportWriter from '../utils/ReportWriter.js'
 
-const reportPrefix = 'PRTR_2015'
+const reportPrefix = 'PRTR_2010'
 
 const logger = createLogger()
 
-describe('PRTR 2015 Migration Data Validation', () => {
+describe('PRTR 2010 Migration Data Validation', () => {
   let facilityLookup
 
-  const excelFile = './test/test-data/PRTR_2015.xlsx'
-  const sheetName = '2015_PRTR_DataSet'
+  const excelFile = './test/test-data/PRTR_2010.xlsx'
+  const sheetName = '2010_PRTR_DataSet'
 
   const facilities = ExcelUtils.getSheetData(excelFile, sheetName)
 
@@ -42,10 +42,10 @@ describe('PRTR 2015 Migration Data Validation', () => {
     logger.info(`Lookup Size: ${facilityLookup.size}`)
   })
 
-  describe('PRTR 2015 Facilities Data List verification against Production download', () => {
+  describe('PRTR 2010 Facilities Data List verification against Production download', () => {
     // -------------------------- Test Case 1 --------------------------------------------//
 
-    it('Should validate PRTR 2015 facilities list against Production Data', async function () {
+    it('Should validate PRTR 2010 facilities list against Production Data', async function () {
       this.timeout(0)
 
       //
@@ -68,7 +68,7 @@ describe('PRTR 2015 Migration Data Validation', () => {
       //
       // Enter Reporting Year
       //
-      await SearchByYear.searchByYear('2015')
+      await SearchByYear.searchByYear('2010')
 
       //
       // Wait for Results
@@ -77,7 +77,7 @@ describe('PRTR 2015 Migration Data Validation', () => {
 
       const headingText = await FacilitiesResultsPage.heading.getText()
 
-      expect(headingText).toContain('Facilities matching 2015')
+      expect(headingText).toContain('Facilities matching 2010')
 
       const totalRecords = await FacilitiesResultsPage.getTotalRecords()
 
@@ -177,10 +177,10 @@ describe('PRTR 2015 Migration Data Validation', () => {
       // expect(discrepancies.length).toBe(0)
     })
 
-    describe('PRTR 2015 Facilities PRTR Data Validation against Production download', () => {
+    describe('PRTR 2010 Facilities PRTR Data Validation against Production download', () => {
       // -------------------------Test Case2 -----------------------------------------------------//
       facilities.slice(0, facilityLimit).forEach((row) => {
-        it(`Should validate PRTR release and transferdata against Facility ${row.FacilityFinal} for 2015`, async function () {
+        it(`Should validate PRTR release and transferdata against Facility ${row.FacilityFinal} for 2010`, async function () {
           this.timeout(0)
 
           const validationErrors = []
@@ -212,7 +212,7 @@ describe('PRTR 2015 Migration Data Validation', () => {
 
             await FacilitiesDetailsPage.waitForPageLoad()
 
-            await FacilitiesDetailsPage.selectYear('2015')
+            await FacilitiesDetailsPage.selectYear('2010')
 
             logger.info(
               `Validating Facility: ${await FacilitiesDetailsPage.getFacilityName()}`
