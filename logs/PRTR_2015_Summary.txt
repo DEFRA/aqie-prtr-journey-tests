@@ -1,0 +1,8 @@
+
+PRTR VALIDATION EXECUTION SUMMARY
+
+Facilities Processed : 20
+Facilities Passed    : 5
+Facilities Failed    : 15
+Facilities With Warnings : 1
+Total Warning Count : 1
