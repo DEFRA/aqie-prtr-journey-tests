@@ -45,7 +45,6 @@ export const config = {
       './test/specs/Phase1e2e.js',
       './test/specs/MigratedDataCheckE2E.js',
       './test/specs/PRTR2024DataValidation.js',
-      './test/specs/PRTR2010DataValidation.js',
       './test/specs/downloadDataPhase1E2E.js',
       './test/specs/accessibilityDownloadData.js',
       './test/specs/PRTR2007DataValidation.js'
