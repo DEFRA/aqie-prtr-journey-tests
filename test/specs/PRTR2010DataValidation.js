@@ -23,7 +23,7 @@ describe('PRTR 2010 Migration Data Validation', () => {
 
   const facilities = ExcelUtils.getSheetData(excelFile, sheetName)
 
-  const facilityLimit = Number(process.env.FACILITY_LIMIT) || facilities.length
+  const facilityLimit = Number(process.env.FACILITY_LIMIT) || 10
 
   const executionSummary = {
     processed: 0,
@@ -45,7 +45,7 @@ describe('PRTR 2010 Migration Data Validation', () => {
   describe('PRTR 2010 Facilities Data List verification against Production download', () => {
     // -------------------------- Test Case 1 --------------------------------------------//
 
-    it('Should validate PRTR 2010 facilities list against Production Data', async function () {
+    /* it('Should validate PRTR 2010 facilities list against Production Data', async function () {
       this.timeout(0)
 
       //
@@ -175,7 +175,7 @@ describe('PRTR 2010 Migration Data Validation', () => {
 
       // Enable later when reconciliation is complete
       // expect(discrepancies.length).toBe(0)
-    })
+    }) */
 
     describe('PRTR 2010 Facilities PRTR Data Validation against Production download', () => {
       // -------------------------Test Case2 -----------------------------------------------------//

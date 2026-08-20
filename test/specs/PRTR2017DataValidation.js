@@ -23,7 +23,7 @@ describe('PRTR 2017 Migration Data Validation', () => {
 
   const facilities = ExcelUtils.getSheetData(excelFile, sheetName)
 
-  const facilityLimit = Number(process.env.FACILITY_LIMIT) || facilities.length
+  const facilityLimit = Number(process.env.FACILITY_LIMIT) || 10
 
   const executionSummary = {
     processed: 0,

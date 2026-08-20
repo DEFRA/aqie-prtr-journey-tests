@@ -35,7 +35,11 @@ export const config = {
   // then the current working directory is where your `package.json` resides, so `wdio`
   // will be called from there.
   //
-  specs: ['./test/specs/**/*.e2e.js'],
+  specs: [
+    './test/specs/PRTR2017DataValidation.js',
+    './test/specs/PRTR2010DataValidation.js',
+    './test/specs/PRTR2023DataValidation.js'
+  ],
   // Patterns to exclude.
   exclude: [
     // 'path/to/excluded/files'
@@ -71,6 +75,7 @@ export const config = {
         args: [
           '--no-sandbox',
           '--disable-infobars',
+          '--headless',
           '--disable-gpu',
           '--window-size=1920,1080',
           '--enable-features=NetworkService,NetworkServiceInProcess',

@@ -88,6 +88,45 @@ class FacilityValidator {
     }
 
     //
+    // SOIL
+    //
+    const hasSoil = await FacilitiesDetailsPage.hasSoilReleases()
+
+    if (excelRow['Soil_PR.Quantity']) {
+      if (!hasSoil) {
+        validationErrors.push(
+          `[${facilityName}] Soil Releases section missing`
+        )
+      } else {
+        const soil = await FacilitiesDetailsPage.getSoilReleases()
+        const actualQuantity = FacilitiesDetailsPage.getTotalQuantity(soil)
+        const actualUnit = FacilitiesDetailsPage.getUnit(soil)
+
+        ValidationUtils.validateQuantity(
+          facilityName,
+          'Soil',
+          Number(excelRow['Soil_PR.Quantity']),
+          actualQuantity,
+          validationErrors,
+          validationWarnings
+        )
+
+        if (
+          actualUnit?.toLowerCase() !==
+          excelRow['Soil_PR.Units']?.toLowerCase()
+        ) {
+          validationErrors.push(
+            `[${facilityName}] Soil Unit mismatch. Expected=${excelRow['Soil_PR.Units']}, Actual=${actualUnit}`
+          )
+        }
+      }
+    } else if (hasSoil) {
+      validationErrors.push(
+        `[${facilityName}] Soil Releases section exists but Excel contains no Soil data`
+      )
+    }
+
+    //
     // POLLUTANT TRANSFERS
     //
     const hasTransfers = await FacilitiesDetailsPage.hasPollutantTransfers()
